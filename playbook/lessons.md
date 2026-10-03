@@ -124,5 +124,8 @@ The engine is carried from game to game, so old-game assumptions hide in shared 
 - **Rename everything that identifies the old game when copying the engine:** title, build output name, and
   above all the save key. (E) Emerald still saved under Red's `localStorage` key, so the two games on one web
   address would overwrite each other's saves. `tools/new_game.js` now lists these.
+- **Keep a status file in the game repo (`docs/STATUS.md`)** with the current chapter's stages as a checklist and
+  notes for whoever picks the work up. A session can end mid-chapter (time limits, context limits); committing the
+  status with each stage means the next session starts from facts, not from a summary.
 - **Long work in an ephemeral cloud container:** commit and push at every chapter boundary, and keep lessons in a
   repo (this one), never only in the session.

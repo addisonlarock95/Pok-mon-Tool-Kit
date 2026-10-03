@@ -7,6 +7,8 @@ A code-drawn remake of {{SOURCE}} in plain JavaScript: everything on screen is d
 session if it isn't there (`add_repo`), read its `playbook/README.md` and `playbook/lessons.md`, and file general
 lessons there (its `record-lesson` skill). Notes about this game only go in `docs/` here.
 
+**Where the work stands: `docs/STATUS.md`** (read it first in a new session; update it at each stage).
+
 ## Working rules
 - Work chapter by chapter (badge to badge): maps → story playthrough → art and music → audit → sweep → build →
   commit and push to the working branch. Don't open a PR unless asked.
