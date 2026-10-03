@@ -28,3 +28,13 @@ of this applies to all of them. The full Emerald specifics live in that repo's `
   `_buildings` boxes, `_rects`, `_ground`, and `_below` (label the cell under a metatile).
 - Palette themes per region (`volcanic`, `ash`, `khaki`, `desert`) restyled whole areas without new painters.
 - Shallow water became its own label (`shallows`); underground water, waterfalls and lava each needed a painter.
+
+## Mechanics found in chapter 7
+- Rotating gates (`rotating_gate.c`): pivot on a cell corner, arms on grid lines; crossing an arm turns the gate if
+  every swept cell is clear (the original only checks collision value 1). Fortree Gym and Trick House 6.
+- Acro Bike rails (`MB_*_RAIL`) block on foot; still water you can't surf (`MB_NORMAL`, blocked, blue) needs its own
+  look-alike label so it isn't surfable.
+- `MOVEMENT_TYPE_INVISIBLE` (Kecleon): solid and talkable, not drawn.
+- Route 118's music is split by x position (`GetCurrLocationDefaultMusic`).
+- `GetBattleOutcome` follows pokeemerald's `B_OUTCOME_*` (caught = 7); scripts use it after Kecleon battles.
+- FLY lands on the heal location of a town whose `FLAG_VISITED_*` is set; Littleroot by the player's own house.

@@ -9,7 +9,7 @@ engine-level tools, `tools/<game>/` the ones that read the source game). The cod
 | Tool | What it does |
 | --- | --- |
 | `tools/headless.js` | Loads every `<script>` from `index.html` into a Node VM and saves frames as PNG. Everything else builds on it. |
-| `tools/story.js prefix "cmd ..."` | The story driver: `load:` `save:` `go:x,y` `step:dir:n` `face:` `A` `pick:N` `w:N` `eval:` `trace` `log` `shot`. Text boxes advance by themselves; menus take the first option unless `pick:` says otherwise. |
+| `tools/story.js prefix "cmd ..."` | The story driver: `load:` `save:` `go:x,y` `gatego:x,y` `step:dir:n` (exactly n cells) `face:` `A` `pick:N` `w:N` `eval:` `trace` `log` `shot`. Text boxes advance by themselves; menus take the first option unless `pick:` says otherwise. |
 | `tools/autoplay.js` | The shared "play like a person" policy: strongest move with PP left, a healthy switch-in, presses through evolution and forced switches. Every automated player uses it, so a hang is never "the test pressed the wrong button". |
 | `tools/build_single.js` | Inlines everything into one offline HTML file (`dist/`), which is what gets published as the test link. |
 | `tools/monsheet.js`, `peoplefront.js`, `portraitsheet.js` | Contact sheets for reviewing new Pokémon, overworld people and battle portraits. |
@@ -26,8 +26,10 @@ engine-level tools, `tools/<game>/` the ones that read the source game). The cod
 | `mapinfo.js Map` | Before a story leg: exits, warps and their kinds, objects and hide flags, edge cells. |
 | `reach.js Map x y [row0 row1]` | `go` says "no path": prints what is reachable; the first unreached cell next to the reached region is the blocker. |
 | `warproute.js A x y B x y [regex]` | Puzzles across floors (gym vents, cave holes): the warps to take. |
-| `battleprobe.js TRAINER [save] [--party SP:LV,...] [--log N]` | A battle never ends or keeps being lost: fights it in isolation and prints the whole log. |
+| `battleprobe.js TRAINER [save] [--party SP:LV,...] [--heal] [--log N]` | A battle never ends or keeps being lost: fights it in isolation (healed first with `--heal`) and prints the whole log. Run it a few times: one result is not a verdict. |
 | `talksweep.js [regex] [save] [--jobs N]` | End of chapter: talks to every NPC and sign in parallel workers; keeps a `KNOWN` list of test-only hangs with reasons. |
+| `labeldiff.js [rev] [mapRegex]` | After any converter rule or override change: which maps' labels changed since a git revision. |
+| `gatesolve.js Map x0 y0 x1 y1` | A rotating-gate puzzle: breadth-first search over position and gate orientations; proves it solvable. In a playthrough, the story driver's `gatego:x,y` solves from the live state and re-solves after interruptions. |
 | `tests/*.js` | Feature tests for tricky systems (eggs and the Day Care; a cell patch equals a full rebuild). |
 | `saves/` | Milestone saves (`chN_*.json`) with a README table. |
 

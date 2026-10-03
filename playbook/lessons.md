@@ -15,6 +15,16 @@ R = Red). Add new ones at the end of the right section; keep each to a few lines
   before suspecting damage or AI code. (E) Norman won because the eval-built Combusken had no Fighting move.
 - **Pathfinders must keep warp cells off the route,** the first step included, unless the warp is the goal.
   (E) Starting on one of a pair of room-door warps, the driver stepped onto the other and bounced through the gym.
+- **Drive exact routes one cell per press.** Holding a direction for a fixed number of frames sometimes started a
+  second step (a walk takes 16 frames, the hold was 18), which broke every precomputed route. (E) `step:N` now holds
+  until the step starts, then releases.
+- **Puzzles whose state changes as you walk need a state search, not a path.** (E) Fortree Gym's turnstiles: the
+  pathfinder found no route at all. A breadth-first search over position plus every gate's orientation, using the
+  game's own gate rules, solves it, and proves the port is solvable. Solve from the *live* state and re-solve after
+  any interruption: a trainer who walks over to battle stands where the old plan expected floor (`gatego`).
+- **Evolving after a move's level skips that move**, faithfully. (E) Combusken evolved at 37 and never got Blaze
+  Kick (36), so the test party lost to Winona until it was given what a player would have (TMs from the bag, the
+  Move Relearner). Note such test-party changes in the saves README.
 
 ## Measure before optimising
 
@@ -51,6 +61,12 @@ The engine is carried from game to game, so old-game assumptions hide in shared 
 - **Code run during a map load sees the previous map's state.** (E) Specials run by a map's load script redrew
   `ow.render`, which still belonged to the previous map, and crashed. Redraws during a load now just drop the
   cache, and the load builds the new render afterwards.
+- **Test each field move in the new region the chapter it unlocks.** Surf (chapter 6) and Fly (chapter 7) both
+  silently used Kanto data in Hoenn: an early return on Kanto tiles, then a Kanto-only destination list and town map.
+  A small test per field move (`tests/fly.js`) catches it on the day the HM arrives.
+- **Things the original draws as sprites aren't in the map data.** (E) Rotating gates exist only in C tables
+  (`rotating_gate.c`); the converted gym was a wide-open room. The audit lists their set-up specials
+  (`RotatingGate_InitPuzzle`); treat a special whose name sounds like a puzzle as a missing mechanic, not a no-op.
 
 ## Data conversion
 
@@ -61,6 +77,14 @@ The engine is carried from game to game, so old-game assumptions hide in shared 
   next conversion silently undoes the fix.
 - **Paraphrase dialogue, keep the beats.** (R) Every text label exists with new wording that follows the original
   line by line, so scripts keep working by label.
+- **Order specific rules before generic ones, and don't trust names.** (E) The water rule matched any behaviour
+  containing POND or OCEAN, so `MB_BRIDGE_OVER_POND_*` and `MB_BRIDGE_OVER_OCEAN` became water and Route 119's and
+  120's bridges vanished. A cycling-road rule keyed on the same behaviour also needed limiting to its own tileset.
+- **A per-map override list can replace detection for the whole map.** (E) Listing the Weather Institute's
+  building box made Route 119's house vanish, because a `_buildings` list switches building detection off for that
+  map. Know which overrides add and which replace.
+- **After any converter change, diff the labels of every other map** against the last commit (`labeldiff`). Only
+  the maps you are working on should change; anything else is a regression in a map nobody is looking at.
 
 ## Coverage
 
@@ -81,6 +105,11 @@ The engine is carried from game to game, so old-game assumptions hide in shared 
   it a hi-res twin.
 - **Contrast against the ground it sits on.** (E) The first surf mount was navy on navy water and unreadable;
   check new sprites on their real background.
+- **Invisible means no shadow either.** (E) Kecleon are `MOVEMENT_TYPE_INVISIBLE` until the Devon Scope; drawing
+  their soft shadow would have given them away.
+- **A region's identity can live in one building type.** (E) Fortree read as an ordinary town until its houses got a
+  tree-house style (log walls, a leaf crown) and labels for the deck face, railings and ladders. Compare a town
+  against the original for its signature feature before polishing details.
 
 ## Workflow
 
