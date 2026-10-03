@@ -139,6 +139,9 @@ The engine is carried from game to game, so old-game assumptions hide in shared 
 - **A region's identity can live in one building type.** (E) Fortree read as an ordinary town until its houses got a
   tree-house style (log walls, a leaf crown) and labels for the deck face, railings and ladders. Compare a town
   against the original for its signature feature before polishing details.
+- **Reserve a look for each gameplay signal; texture must never imitate it.** (E) Open sea had random darker patches
+  that read like dive spots, while the real dive spots weren't drawn differently at all. Give the signal its own label
+  and its own colours (dive spots: the darkest blues), and keep background variation going the other way (lighter).
 
 ## Workflow
 
