@@ -27,6 +27,16 @@ R = Red). Add new ones at the end of the right section; keep each to a few lines
   Kick, and I first blamed the test party's "bad luck" on faithful behaviour. A real player's Combusken evolves at 36
   and learns it. Give EXP instead, and keep a check over the milestone saves (`tests/saves.js`: nothing unevolved
   past its evolution level). When a test party looks weaker than a player's would, suspect the test edits first.
+- **The autoplayer must ask the engine what is legal.** (E) A "hung" double battle was the test choosing a DISABLEd
+  move every turn; its own scoring ignored DISABLE, TAUNT and TORMENT. Score only moves the engine's `usable()`
+  accepts, and drop moves that can't work (Dream Eater on an awake foe).
+- **A route command stops when the map changes.** (E) `surfgo` to a warp kept walking toward the same numbers on the
+  new map and left the player somewhere random. Any goto-by-coordinates in a driver should end on a map change.
+- **Test-save hacks leak into later tests.** (E) The saves carried a 9999-step REPEL to keep story runs quiet, so a
+  grinding command fought nothing for 4000 steps. Name such hacks in the saves README and undo them where they
+  get in the way.
+- **Level test parties by EXP, with a grind command, not by editing.** (E) `grind:N` paces in grass or water until N
+  wild battles are fought; evolutions and moves happen as for a player.
 
 ## Measure before optimising
 
@@ -52,6 +62,15 @@ Reading the data right isn't enough: check what the original *engine does* with 
   must `return` it.
 - **Trainer and object types change behaviour.** (E) Buried trainers see in all four directions at range 1 and
   are invisible until they pop out.
+- **Check the battle format before tuning difficulty.** (E) Tate & Liza were unwinnable one-on-one because the
+  engine only had single battles; every `trainerbattle_double` had quietly run as singles for seven chapters. If the
+  original has double battles, port them early: a leader designed for two-on-two is a different fight in singles.
+- **A warp within the same map may keep the room as it is.** (E) Mossdeep Gym's pads save the objects
+  (`DoMossdeepGymWarp`); reloading them undid the switch puzzle. Read how a warp type loads objects before treating
+  all warps alike.
+- **Port a puzzle with a solver beside it.** (E) The rotating-tile puzzle has `tools/tilepath.js`, a search over
+  the player's cell and every object's position using the game's own rules. Comparing its predicted state with the
+  live one after each step found the warp bug above in minutes.
 
 ## Inherited engine code
 
@@ -69,6 +88,14 @@ The engine is carried from game to game, so old-game assumptions hide in shared 
 - **Things the original draws as sprites aren't in the map data.** (E) Rotating gates exist only in C tables
   (`rotating_gate.c`); the converted gym was a wide-open room. The audit lists their set-up specials
   (`RotatingGate_InitPuzzle`); treat a special whose name sounds like a puzzle as a missing mechanic, not a no-op.
+- **Objects are addressed by name and by number; support both everywhere.** (E) Scripts do
+  `setvar VAR_0x8008, LOCALID_X` and then `applymovement VAR_0x8008`: the variable holds the number. Hoenn objects
+  had no number, so the lookup failed silently and `removeobject` hid the wrong person (and its hide flag hid a
+  whole team of grunts).
+- **Generalise an engine from 1v1 to NvN by battler objects, not by copying the loop.** (E) The Gen 3 engine worked on
+  `side` objects with a `foe`; doubles became extra battlers sharing the party and side screens, a target set before
+  each hit, and a separate turn loop. The single-battle path stayed untouched, so every earlier save still behaves
+  the same.
 
 ## Data conversion
 
