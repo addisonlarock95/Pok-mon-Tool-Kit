@@ -22,9 +22,11 @@ R = Red). Add new ones at the end of the right section; keep each to a few lines
   pathfinder found no route at all. A breadth-first search over position plus every gate's orientation, using the
   game's own gate rules, solves it, and proves the port is solvable. Solve from the *live* state and re-solve after
   any interruption: a trainer who walks over to battle stands where the old plan expected floor (`gatego`).
-- **Evolving after a move's level skips that move**, faithfully. (E) Combusken evolved at 37 and never got Blaze
-  Kick (36), so the test party lost to Winona until it was given what a player would have (TMs from the bag, the
-  Move Relearner). Note such test-party changes in the saves README.
+- **Never level a test party by setting its level.** Setting `.level` (an `eval` shortcut) skips the level-up that
+  triggers evolution. (E) Combusken sat at 36 unevolved for three chapters, evolved a level late and missed Blaze
+  Kick, and I first blamed the test party's "bad luck" on faithful behaviour. A real player's Combusken evolves at 36
+  and learns it. Give EXP instead, and keep a check over the milestone saves (`tests/saves.js`: nothing unevolved
+  past its evolution level). When a test party looks weaker than a player's would, suspect the test edits first.
 
 ## Measure before optimising
 
