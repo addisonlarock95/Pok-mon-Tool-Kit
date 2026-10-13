@@ -71,6 +71,23 @@ Reading the data right isn't enough: check what the original *engine does* with 
 - **Port a puzzle with a solver beside it.** (E) The rotating-tile puzzle has `tools/tilepath.js`, a search over
   the player's cell and every object's position using the game's own rules. Comparing its predicted state with the
   live one after each step found the warp bug above in minutes.
+- **Maps can swap layouts mid-game.** (E) `setmaplayoutindex` in a transition script replaces the cells (Sky
+  Pillar's floors before Rayquaza wakes, Route 131's pillar, Sootopolis during the legends' fight). Ignoring it
+  left Sky Pillar unsolvable: the shipped layout is the later, broken-floor one. Convert every layout a map's
+  scripts name and swap it in before the map is built; reset to the map's own layout on each load.
+- **Floors that move you need their own step rules.** (E) Thin ice (cracks, then breaks), cracked floors (fall to
+  the floor below), slide tiles (send you back): each is a per-step callback in the original, not a script. Read
+  the step callback and give the floor an explicit label so a sweep or solver can see it.
+- **A cutscene's camera is an object.** (E) `SpawnCameraObject` makes an invisible object the view follows; scripts
+  walk it (including diagonal moves). Implement it once as an actor the camera tracks.
+- **Check the constants behind outcome codes.** (E) The battle outcome mapping had RAN and MON_FLED swapped, harmless
+  until a legendary's script branched on "the player ran".
+- **Inherited limits can be wrong for the new game.** (E) Red's 20-slot bag refused Juan's TM ("bag is full") when
+  the test save held 20 items; Emerald's bag has pockets with their own sizes. Check capacity rules when the source
+  game changes.
+- **A lost gym battle in automated play is usually the test party.** (E) Juan's Kingdra (Double Team + Rest)
+  outlasted a Swampert with 8 PP left of its one good move; with full PP the probe wins 3 of 4. Probe the battle
+  in isolation (`battleprobe`) with `--heal` before suspecting the engine.
 
 ## Inherited engine code
 
