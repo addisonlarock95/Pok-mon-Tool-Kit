@@ -88,6 +88,11 @@ Reading the data right isn't enough: check what the original *engine does* with 
 - **A lost gym battle in automated play is usually the test party.** (E) Juan's Kingdra (Double Team + Rest)
   outlasted a Swampert with 8 PP left of its one good move; with full PP the probe wins 3 of 4. Probe the battle
   in isolation (`battleprobe`) with `--heal` before suspecting the engine.
+- **Height levels belong to the walker, not just the cells.** (E) Gen 3 objects carry an elevation: a bridge cell
+  (15) keeps the walker's level, so you pass under a bridge on one level and over it on another, but can never step
+  off it onto the other. Comparing only the two cells' levels let the player walk off a Victory Road bridge onto the
+  path below and reach the exit from the entrance, skipping two floors and Wally. Put the walker's level in every
+  path search's state too (scripted walks, the story driver, route tools), not just in movement.
 
 ## Inherited engine code
 
