@@ -93,6 +93,19 @@ Reading the data right isn't enough: check what the original *engine does* with 
   off it onto the other. Comparing only the two cells' levels let the player walk off a Victory Road bridge onto the
   path below and reach the exit from the entrance, skipping two floors and Wally. Put the walker's level in every
   path search's state too (scripted walks, the story driver, route tools), not just in movement.
+- **Port the whiteout and re-challenge rules with the League.** (E) Losing must run the original's whiteout script
+  (EventScript_WhiteOut resets the Elite Four), and the Elite Four's no-intro battles skip the "already beaten"
+  check. Missing either left the League half-beaten after a loss, with the beaten members only talking.
+- **Check that data lists the engine relies on aren't empty.** (E) The HM list came out empty (the decomp renamed
+  its item constants), so any Pokémon could forget SURF. An audit check that core tables are non-empty is cheap.
+
+## Testing the endgame
+- **An autoplayer has to play like a player for the last battles.** (E) Highest-damage moves alone lost the League
+  with two strong Pokémon: the test player needed to heal from the bag (not two turns running), switch out of a 4x
+  weakness to a teammate within ten levels, and keep its moveset when level-ups offer new moves (it had forgotten
+  STRENGTH and EARTHQUAKE). Write these into the shared autoplayer so the battle probe and the story driver agree.
+- **Level a test team in the background, with heal trips.** (E) Victory Road levelling ran as one long driver command
+  (grind, walk to the Center, heal, return) watched through a log; budget for it before the Elite Four.
 
 ## Inherited engine code
 
